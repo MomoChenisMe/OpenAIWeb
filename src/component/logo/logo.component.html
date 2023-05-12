@@ -1,0 +1,14 @@
+<svg [class]="cssClass" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8D36EA" />
+      <stop offset="100%" stop-color="#305EEB" />
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="200" height="100" [attr.fill]="isFill ? fillColor : 'none'"/>
+  <text x="100" y="35" font-size="40" font-weight="bold" fill="url(#gradient)" text-anchor="middle"
+    dominant-baseline="central" class="text-white font-bold">Momo</text>
+  <text x="100" y="70" font-size="25" fill="url(#gradient)" text-anchor="middle" dominant-baseline="central"
+    class="text-white">ChatGPT AI</text>
+</svg>

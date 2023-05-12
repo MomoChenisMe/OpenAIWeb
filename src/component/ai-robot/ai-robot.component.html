@@ -1,0 +1,96 @@
+<div class="relative flex flex-row-reverse items-end">
+  <button type="button" (click)="openDialog()"
+    class="hover:bg-gray-400 text-white font-bold rounded-lg focus:outline-none focus:shadow-outline-blue">
+    <img class="w-14 h-14" src="assets/AI-Avatar.svg">
+  </button>
+  <div *ngIf="showPopover" [@aiRobotPopoverAnimation]
+    class="absolute bottom-16 right-1 z-50 w-156 bg-gray-800 border border-gray-600 rounded-lg shadow-xl p-4 md:col-span-1 md:order-2">
+    <div class="absolute top-4 right-4">
+      <!-- 添加缩小视窗按钮 -->
+      <button type="button"
+        class="bg-gray-700 hover:bg-gray-400 text-white font-bold rounded-full focus:outline-none focus:shadow-outline-blue"
+        (click)="showPopover = false">
+        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 9H18V15H6V9ZM8.5 11.5H15.5V13.5H8.5V11.5Z" fill="#F3F4F6" />
+        </svg>
+      </button>
+    </div>
+    <div class="text-sm mb-4 text-gray-200">Hi 我是 ChatGPT AI助理, 您可以叫我做以下工作 : <br>
+      <p class="text-purple-300 font-bold mr-8">{{
+        promptText }}</p>
+    </div>
+    <div class="absolute-arrow"></div>
+    <div class="overflow-y-auto h-128 max-h-128 border border-gray-700 rounded-md p-2 flex flex-col-reverse"
+      style="scroll-behavior: smooth">
+      <div class="flex flex-col space-y-4">
+        <ng-container *ngFor="let item of chatData; index as i">
+          <div class="flex flex-row items-start justify-start self-end max-w-md"
+            *ngIf="item.role === 'user' && item.content !== ''">
+            <!-- User頭像 -->
+            <img *ngIf="!UserPicture || UserPicture === ''"
+              class="flex-none w-8 h-8 rounded-full bg-gray-50 mr-3 flex items-center justify-center text-blue-500 text-lg font-bold"
+              src="assets/User-Avatar.svg">
+            <img *ngIf="UserPicture && UserPicture !== ''"
+              class="flex-none w-8 h-8 bg-gray-50 p-1 rounded-full mr-3 flex items-center justify-center"
+              [src]="UserPicture">
+            <!-- User對話框 -->
+            <div class="flex-1 bg-blue-600 rounded-xl px-3 py-2 text-white">
+              {{ item.content }}
+            </div>
+          </div>
+          <div class="flex flex-row items-start justify-start self-start max-w-md"
+            *ngIf="item.role === 'assistant' && item.content !== ''">
+            <!-- AI頭像 -->
+            <img class="flex-none w-8 h-8 rounded-full bg-purple-50 mr-3 flex items-center justify-center"
+              src="assets/AI-Avatar.svg">
+            <!-- AI對話框 -->
+            <div class="flex-1 relative mr-2 flex flex-col">
+              <div class="bg-purple-600 rounded-xl px-3 py-2 text-white max-w-md">
+                <markdown class="prose prose-default text-white" lineNumbers ngPreserveWhitespaces
+                  [data]="item.content"></markdown>
+              </div>
+              <!-- <div class="mt-1 ml-auto text-xs text-gray-400">{{ item.time | date:'yyyy/MM/dd hh:mm a' }}</div> -->
+              <!-- 選擇按鈕 -->
+              <button *ngIf="currentChatIndex !== i || !(loading$ | async)"
+                class="flex-none flex flex-row items-center mt-1 ml-auto text-sm text-blue-200 hover:text-yellow-500 focus:outline-none"
+                (click)="onTipsClick(item.content)">
+                <ng-icon class="mr-1 text-yellow-100" size="1rem" name="matTipsAndUpdatesRound"></ng-icon>
+                <span>喜歡這個答案</span>
+              </button>
+            </div>
+            <!-- 選擇按鈕 -->
+            <!-- <button
+              class="flex-none items-center relative w-6 h-6 rounded-full text-white hover:text-yellow-400 focus:outline-none"
+              (click)="onTipsClick(item.content)">
+              <ng-icon size="1.75rem" name="matThumbUpRound"></ng-icon>
+            </button> -->
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div *ngIf="hotKeyButtonList.length !== 0"
+      class="flex flex-row items-center py-2 my-1 overflow-x-auto whitespace-nowrap">
+      <ng-container *ngFor="let item of hotKeyButtonList">
+        <button
+          [class]="hotKeyClass(item) + 'px-4 py-1 rounded-2xl mr-2 flex flex-row items-center text-gray-100 disabled:bg-gray-400'"
+          (click)="onHotKeyButtonClick(item.hotKey)"
+          [disabled]="(loading$ | async) || (tokenizerObservable$ | async)! > 2000">
+          <ng-icon class=" mr-1" size="1.25rem" [name]="item.icon ? item.icon : 'matRocketLaunchRound'"></ng-icon>
+          <span>{{ item.name }}</span>
+        </button>
+      </ng-container>
+    </div>
+    <form [formGroup]="chatGPTForm" class="relative flex items-center">
+      <input #contentInputField
+        [class]="'bg-gray-900 border border-blue-600 rounded-md p-2 flex-1 text-white focus:outline-none focus:border-blue-400 appearance-none ' + ((tokenizerObservable$ | async)! <= 2000 ? ' ' : 'placeholder-red-400 ')"
+        type="text" [placeholder]="(tokenizerObservable$ | async)! <= 2000 ? '請輸入工作指令...' : '字數超過2000,請整理後再嘗試'"
+        formControlName="content" />
+      <button *ngIf="!(loading$ | async) && (tokenizerObservable$ | async)! <= 2000"
+        class="absolute right-1 bg-gray-900 hover:bg-gray-700 text-white p-2 rounded hover:shadow-lg flex items-center"
+        type="submit" (click)="onCommandSendClick()" [disabled]="(loading$ | async)">
+        <ng-icon size="1.25rem" name="matSendRound"></ng-icon>
+      </button>
+      <span class="loader absolute right-3 p-2" *ngIf="(loading$ | async)"></span>
+    </form>
+  </div>
+</div>

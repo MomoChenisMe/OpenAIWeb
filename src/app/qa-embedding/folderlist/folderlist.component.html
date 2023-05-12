@@ -1,0 +1,108 @@
+<ng-container *ngIf="folderData.nodeType === 'root' else folderListTemplate">
+  <div class="w-full h-full" (contextmenu)="onNodeRightClick($event)">
+    <ng-container *ngIf="isCreatedFolder">
+      <div class="flex flex-row items-center my-2 p-1 select-none">
+        <div class="mr-2 w-5"></div>
+        <ng-icon class="text-yellow-500 mr-1" size="1.25rem" name="matFolderRound"></ng-icon>
+        <form [formGroup]="createFolderForm" (submit)="onCreateFolderSaveClick()" class="z-40 flex-1">
+          <input #folderNameInputField
+            class="bg-gray-900 border w-full border-blue-600 rounded-md px-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+            type="text" formControlName="name" />
+        </form>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isCreatedText">
+      <div class="flex flex-row items-center my-2 p-1 select-none">
+        <div class="mr-2 w-5"></div>
+        <ng-icon class="text-purple-400 mr-1" size="1.25rem" name="matDescriptionRound"></ng-icon>
+        <form [formGroup]="createTextForm" (submit)="onCreateTextSaveClick()" class="z-40 flex-1">
+          <input #folderNameInputField
+            class="bg-gray-900 border w-full border-blue-600 rounded-md px-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+            type="text" formControlName="name" />
+        </form>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
+<ng-template #folderListTemplate>
+  <div [class]="'w-full text-gray-200 ' + ((folderData.parentId === null || folderData.nodeType === 'root') ? '' : 'ml-5 ')">
+    <div class="relative">
+      <div [class]="'flex flex-row items-center my-2 p-1 select-none ' +
+        ((activePopover$ | async)?.id === folderData.id ? 'bg-gray-500 rounded-lg ' : '') +
+        (isCreatedFolder ? '' : 'hover:bg-gray-600 hover:cursor-pointer hover:rounded-lg ')"
+        (click)="onToggleExpansioClick()" (contextmenu)="onNodeRightClick($event)">
+        <ng-container *ngIf="folderData.children.length !==0">
+          <ng-icon [@folderListRotateIcon]="isExpanded ? 'expanded' : 'collapsed'" class="mr-2" size="1.25rem"
+            name="matChevronRightRound">
+          </ng-icon>
+        </ng-container>
+        <div *ngIf="folderData.children.length === 0" class="mr-2 w-5"></div>
+        <ng-icon *ngIf="folderData.nodeType === 'folder'" class="text-yellow-500 mr-1" size="1.25rem"
+          name="matFolderRound"></ng-icon>
+        <ng-icon *ngIf="folderData.nodeType === 'text'" class="text-purple-400 mr-1" size="1.25rem"
+          name="matDescriptionRound"></ng-icon>
+        <ng-container *ngIf="isRenamedFolder || isRenamedText else folderNameTemplate">
+          <ng-container *ngIf="isRenamedFolder">
+            <form [formGroup]="renameForm" (submit)="onRenameFolderSaveClick()" class="z-40 flex-1">
+              <input #folderNameInputField
+                class="bg-gray-900 border w-full border-blue-600 rounded-md px-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+                type="text" formControlName="newName" />
+            </form>
+          </ng-container>
+          <ng-container *ngIf="isRenamedText">
+            <form [formGroup]="renameForm" (submit)="onRenameTextSaveClick()" class="z-40 flex-1">
+              <input #folderNameInputField
+                class="bg-gray-900 border w-full border-blue-600 rounded-md px-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+                type="text" formControlName="newName" />
+            </form>
+          </ng-container>
+        </ng-container>
+        <ng-template #folderNameTemplate>
+          <span class="flex-1 text-ellipsis overflow-hidden whitespace-nowrap">{{ folderData.name }}</span>
+        </ng-template>
+      </div>
+    </div>
+    <div *ngIf="isExpanded">
+      <div *ngFor="let folderChildren of folderData.children">
+        <app-folderlist [folderData]="folderChildren" (createFolderEvent)="onCreateFolder($event)"
+          (renameFolderEvent)="onRenameFolder($event)" (deleteFolderEvent)="onDeleteFolder($event)"
+          (createTextEvent)="onCreateText($event)" (renameTextEvent)="onRenameText($event)"
+          (deleteTextEvent)="onDeleteText($event)" (openTextEvent)="onOpenText($event)"></app-folderlist>
+      </div>
+      <div *ngIf="isCreatedFolder">
+        <div class="ml-5 flex flex-row items-center my-2 p-1 select-none">
+          <div class="mr-2 w-5"></div>
+          <ng-icon class="text-yellow-500 mr-1" size="1.25rem" name="matFolderRound"></ng-icon>
+          <form [formGroup]="createFolderForm" (submit)="onCreateFolderSaveClick()" class="z-40 flex-1">
+            <input #folderNameInputField
+              class="bg-gray-900 border w-full border-blue-600 rounded-md px-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+              type="text" formControlName="name" />
+          </form>
+        </div>
+      </div>
+      <div *ngIf="isCreatedText">
+        <div class="ml-5 flex flex-row items-center my-2 p-1 select-none">
+          <div class="mr-2 w-5"></div>
+          <ng-icon class="text-purple-400 mr-1" size="1.25rem" name="matDescriptionRound"></ng-icon>
+          <form [formGroup]="createTextForm" (submit)="onCreateTextSaveClick()" class="z-40 flex-1">
+            <input #folderNameInputField
+              class="bg-gray-900 border w-full border-blue-600 rounded-md px-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+              type="text" formControlName="name" />
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="isCreatedFolder" class="z-30 fixed inset-0 opacity-0 w-full h-full" (click)="onCreateFolderSaveClick()">
+</div>
+
+<div *ngIf="isRenamedFolder" class="z-30 fixed inset-0 opacity-0 w-full h-full" (click)="onRenameFolderSaveClick()">
+</div>
+
+<div *ngIf="isCreatedText" class="z-30 fixed inset-0 opacity-0 w-full h-full" (click)="onCreateTextSaveClick()">
+</div>
+
+<div *ngIf="isRenamedText" class="z-30 fixed inset-0 opacity-0 w-full h-full" (click)="onRenameTextSaveClick()">
+</div>

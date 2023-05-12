@@ -1,0 +1,49 @@
+<div class="absolute top-4 left-4 flex flex-row">
+  <div class="bg-gray-800 rounded-lg mr-4" *ngIf="showHamburger">
+    <button class="text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white rounded p-2 flex items-center"
+      aria-label="Toggle menu" (click)="showMenu = !showMenu">
+      <!-- <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg> -->
+      <ng-icon size="1.5rem" name="matMenuRound"></ng-icon>
+    </button>
+  </div>
+  <div class="bg-gray-800 rounded-lg">
+    <button class="text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white rounded p-2 flex items-center"
+      aria-label="Toggle menu" routerLink="/">
+      <ng-icon size="1.5rem" name="matHomeRound"></ng-icon>
+    </button>
+  </div>
+</div>
+
+<!-- <div class="bg-gray-800 rounded-lg">
+  <button class="text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white rounded p-2"
+    aria-label="Toggle menu" (click)="showMenu = !showMenu">
+    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
+  </button>
+</div>
+
+<div class="absolute top-4 left-9 bg-gray-800 rounded-lg">
+  <button class="text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white rounded p-2"
+    aria-label="Toggle menu" (click)="showMenu = !showMenu">
+    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+    </svg>
+  </button>
+</div> -->
+
+<div
+  class="slider-menu absolute top-0 left-0 bg-gray-800 px-2 rounded-r-lg z-50 transition-all duration-300 ease-in-out"
+  [class.active]="showMenu">
+  <div class="flex flex-col h-screen">
+    <ng-content></ng-content>
+  </div>
+</div>
+
+<div *ngIf="showMenu" [@fadeAnimation] class="absolute top-0 left-0 w-full h-full bg-black z-40" (click)="showMenu = !showMenu">
+</div>

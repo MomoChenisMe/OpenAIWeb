@@ -1,0 +1,32 @@
+.loaderText {
+  color: #FFF;
+  display: inline-block;
+  position: relative;
+  font-size: 1rem;
+  // font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+.loaderText::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  position: absolute;
+  bottom: 5px;
+  right: -5px;
+  box-sizing: border-box;
+  animation: animloader 1s linear infinite;
+}
+
+@keyframes animloader {
+  0% {
+    box-shadow: 10px 0 rgba(255, 255, 255, 0), 20px 0 rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 10px 0 white, 20px 0 rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 10px 0 white, 20px 0 white;
+  }
+}

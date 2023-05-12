@@ -1,0 +1,52 @@
+<ng-container *ngIf="chatroom.chatroomID === currentChatroomID; else chatroomButtonTemplate">
+  <div class="bg-purple-500 flex flex-row p-2 text-gray-300 rounded-lg mb-4 w-full">
+    <div class="flex-1 flex flex-row items-center truncate">
+      <ng-icon class="mr-1" size="1.25rem" name="matChatRound"></ng-icon>
+      <ng-container *ngIf="isEdit$ | async; else textTemplate">
+        <form [formGroup]="chatroomNameForm" (submit)="onChatroomEditSaveClick()">
+          <input
+            class="bg-gray-900 border w-full border-blue-600 rounded-md flex-1 px-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+            type="text" formControlName="chatName" />
+        </form>
+      </ng-container>
+      <ng-template #textTemplate>
+        <span>{{ chatroom.chatName }}</span>
+      </ng-template>
+    </div>
+    <ng-container *ngIf="(isEdit$ | async) || (isDelete$ | async); else toolsTemplate">
+      <ng-container *ngIf="(isEdit$ | async)">
+        <button class="ml-1 flex-none flex items-center hover:text-gray-100" (click)="onChatroomEditSaveClick()">
+          <ng-icon size="1.25rem" name="matCheckRound"></ng-icon>
+        </button>
+        <button class="ml-1 flex-none flex items-center hover:text-gray-100" (click)="onChatroomEditCancelClick()">
+          <ng-icon size="1.25rem" name="matCloseRound"></ng-icon>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="(isDelete$ | async)">
+        <button class="ml-1 flex-none flex items-center hover:text-gray-100" (click)="onChatroomDeleteSaveClick()">
+          <ng-icon size="1.25rem" name="matCheckRound"></ng-icon>
+        </button>
+        <button class="ml-1 flex-none flex items-center hover:text-gray-100" (click)="onChatroomDeleteCancelClick()">
+          <ng-icon size="1.25rem" name="matCloseRound"></ng-icon>
+        </button>
+      </ng-container>
+    </ng-container>
+    <ng-template #toolsTemplate>
+      <button class="ml-1 flex-none flex items-center hover:text-gray-100" (click)="onChatroomEditClick()" [disabled]="chatDisabled">
+        <ng-icon size="1.25rem" name="matEditRound"></ng-icon>
+      </button>
+      <button class="ml-1 flex-none flex items-center hover:text-gray-100" (click)="onChatroomDeleteClick()" [disabled]="chatDisabled">
+        <ng-icon size="1.25rem" name="matDeleteRound"></ng-icon>
+      </button>
+    </ng-template>
+  </div>
+</ng-container>
+<ng-template #chatroomButtonTemplate>
+  <button
+    class="hover:border hover:border-purple-500 flex flex-row items-center p-2 text-gray-400 hover:text-white rounded-lg mb-4 w-full"
+    (click)="onChatroomClick()" [disabled]="chatDisabled">
+    <ng-icon class="mr-1" size="1.25rem" name="matChatRound"></ng-icon>
+    <span>{{ chatroom.chatName }}</span>
+  </button>
+</ng-template>

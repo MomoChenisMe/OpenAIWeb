@@ -1,0 +1,16 @@
+
+.ck.ck-editor__editable {
+  border: 1px solid #3182ce !important;
+  border-radius: 0.5rem;
+  padding-top: 0.5rem;
+  padding-right: 1rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  line-height: 1.75;
+}
+
+.ck.ck-editor__editable:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+  border-color: #4299e1;
+}

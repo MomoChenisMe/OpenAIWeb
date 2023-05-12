@@ -1,0 +1,38 @@
+/* Hamburger 選單樣式 */
+.slider-menu {
+  transform: translateX(-15rem);
+  height: 100vh;
+  width: 15rem;
+  visibility: hidden;
+}
+
+.slider-menu.active {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.slider-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slider-menu ul li {
+  padding: 10px;
+  border-bottom: 1px solid #374151;
+}
+
+.slider-menu ul li:last-child {
+  border-bottom: none;
+}
+
+.slider-menu ul li a {
+  color: #d8dee9;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.slider-menu ul li a:hover {
+  color: #f9fafb;
+}
+

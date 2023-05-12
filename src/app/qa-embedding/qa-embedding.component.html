@@ -1,0 +1,136 @@
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <!-- Hamburger 選單 -->
+  <app-slider-menu [showHamburger]="false"></app-slider-menu>
+  <div class="absolute inset-0 flex items-center justify-center mt-16">
+    <div class="relative w-full h-full p-4 flex flex-col items-center justify-center">
+      <div class="flex flex-row bg-gray-800 rounded-lg shadow-lg w-full h-full overflow-hidden">
+        <div class="flex-none border-r border-gray-600 w-56 p-2 overflow-hidden flex flex-col">
+          <div class="font-bold text-white text-2xl flex flex-col items-center p-1 pb-3 mb-4 border-b border-gray-600">
+            <ng-icon class="text-rose-300 mr-2" size="3rem" name="matAutoStoriesRound"></ng-icon>
+            <span>QA文本管理</span>
+          </div>
+          <div class="flex-none relative flex items-center mb-2">
+            <input
+              class="bg-gray-900 border border-blue-700 rounded-md p-1 pr-6 w-full text-white focus:outline-none focus:border-blue-400 appearance-none"
+              type="text" placeholder="查詢資料夾或文檔..." />
+            <ng-icon class="absolute right-1 top-2 text-gray-400" size="1.25rem" name="matSearchRound"></ng-icon>
+          </div>
+          <div class="flex-1 h-full flex flex-col overflow-auto whitespace-nowrap">
+            <app-popovermenu></app-popovermenu>
+            <ng-container *ngFor="let item of folderData">
+              <app-folderlist [folderData]="item" (createFolderEvent)="onCreateFolder($event)"
+                (renameFolderEvent)="onRenameFolder($event)" (deleteFolderEvent)="onDeleteFolder($event)"
+                (createTextEvent)="onCreateText($event)" (renameTextEvent)="onRenameText($event)"
+                (deleteTextEvent)="onDeleteText($event)" (openTextEvent)="onOpenText($event)"></app-folderlist>
+            </ng-container>
+          </div>
+        </div>
+        <div class="flex-1 flex flex-col overflow-hidden">
+          <div class="bg-gray-600 flex-none">
+            <ul class="flex overflow-y-auto whitespace-nowrap" *ngIf="(loadText$ | async) !== ''">
+              <li *ngFor="let textData of storageTextData" class="mr-1 pt-1 hover:cursor-pointer rounded-t-md"
+                [class.bg-gray-800]="selectedTextId === textData.id"
+                [class.bg-gray-700]="selectedTextId !== textData.id" (click)="selectTab(textData.id)">
+                <div class="inline-flex items-center px-4 py-1 text-base font-medium text-gray-100 rounded-t"
+                  [class.text-gray-100]="selectedTextId === textData.id"
+                  [class.text-gray-400]="selectedTextId !== textData.id">
+                  <ng-icon class="text-purple-400 mr-1" size="1.25rem" name="matDescriptionRound"></ng-icon>
+                  {{ textData.name }}
+                  <button (click)="onCloseText(textData.id)"
+                    class="ml-2 inline-flex text-gray-500 hover:bg-gray-500 hover:rounded-sm hover:text-gray-300 ">
+                    <ng-icon class="" size="1rem" name="matCloseRound"></ng-icon>
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="flex-1 p-2 relative overflow-hidden">
+            <div class="relative w-full h-full flex flex-col">
+              <ng-container *ngIf="(loadText$ | async) !== '' else emptyTextDataTemplate">
+                <ng-container *ngIf="loadTextData$ | async as loadTextData">
+                  <form [formGroup]="openTextForm" class="flex-1 overflow-hidden">
+                    <ckeditor class="prose prose-ckeditor" [editor]="Editor" (ready)="onCkEditorReady($event)"
+                      formControlName="textHtml">
+                    </ckeditor>
+                  </form>
+                  <div class="relative flex-none flex flex-row-reverse mt-2">
+                    <div class="flex-none text-sm text-gray-400 mr-2">
+                      文本字數 :
+                      <ng-container *ngIf="tokenSize$ | async as tokenSize; else zeroTemplate">
+                        <span *ngIf="tokenSize <= 512" class="font-bold">
+                          {{ tokenSize }}
+                        </span>
+                        <span *ngIf="tokenSize > 512 && tokenSize <= 1024" class="font-bold text-blue-300">
+                          {{ tokenSize }}
+                        </span>
+                        <span *ngIf="tokenSize > 1024 && tokenSize <= 1536" class="font-bold text-purple-400">
+                          {{ tokenSize }}
+                        </span>
+                        <span *ngIf="tokenSize > 1536 && tokenSize <= 2000" class="font-bold text-red-600">
+                          {{ tokenSize }}
+                        </span>
+                        <span *ngIf="tokenSize > 2000" class="font-bold text-red-600">
+                          文本字數超過2000,請整理文本後再嘗試
+                        </span>
+                      </ng-container>
+                      <ng-template #zeroTemplate>
+                        <span class="font-bold">
+                          0
+                        </span>
+                      </ng-template>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex ml-2 p-2" *ngIf="(loading$ | async) else toolbarTemplate">
+                        <span class="loader w-14 h-14"></span>
+                      </div>
+                      <ng-template #toolbarTemplate>
+                        <div class="flex flex-row">
+                          <button
+                            class="ml-2 mr-5 hover:bg-gray-600 text-lime-600 font-bold p-1 rounded-lg focus:outline-none focus:shadow-outline-blue flex items-center"
+                            (click)="onTextSaveClick()">
+                            <ng-icon size="2rem" name="matSaveRound"></ng-icon>
+                          </button>
+                          <button
+                            class="hover:bg-gray-600 text-cyan-600 font-bold p-1 rounded-lg focus:outline-none focus:shadow-outline-blue flex items-center"
+                            (click)="onTextReloadClick()">
+                            <ng-icon size="2rem" name="matRefreshRound"></ng-icon>
+                          </button>
+                        </div>
+
+                      </ng-template>
+                    </div>
+                    <!-- <button
+                      class="flex-none bg-blue-600 hover:bg-blue-700 text-white font-bold my-2 py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline-blue"
+                      (click)="onTextSaveClick()">
+                      <span class="flex items-center">
+                        <span class="loader mr-2" *ngIf="(loading$ | async)"></span>
+                        <ng-icon class="mr-2" *ngIf="!(loading$ | async)" size="1.25rem" name="matSaveRound"></ng-icon>
+                        <span class="text-lg">{{ (loading$ | async) ? '儲存文本中' : '儲存文本' }}</span>
+                      </span>
+                    </button> -->
+                    <!-- Ai Robot -->
+                    <app-ai-robot class="absolute right-2 -top-20" promptText="將文本做 : 文字編輯、文書處理、文本格式化和中翻英..等工作"
+                      [systemPrompt]="aiRobotSystemPrompt" [hotKeyButtonList]="aiRobotHotKeyButtonList"
+                      [content]="formatTextData" [tokenizerObservable$]="tokenSize$"
+                      (tipsClick)="onAIRobotTipClick($event)"></app-ai-robot>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-template #emptyTextDataTemplate>
+                <div class="flex flex-col items-center justify-center w-full h-full text-purple-400">
+                  <ng-icon size="6rem" name="matDescriptionRound"></ng-icon>
+                  <span class="text-xl">尚未開啟文件</span>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Logo -->
+  <app-logo cssClass="absolute top-4 left-20 h-10 w-24"></app-logo>
+  <!-- User -->
+  <app-user></app-user>
+
+</div>

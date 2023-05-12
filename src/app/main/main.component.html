@@ -1,0 +1,31 @@
+<div class="flex justify-center items-center h-screen bg-gradient-to-r from-purple-600 to-blue-600">
+  <app-user></app-user>
+  <div class="bg-gray-800 p-5 rounded-lg shadow-lg">
+
+    <!-- Logo -->
+    <app-logo cssClass="h-24 w-72 mb-10" fillColor="#000000"></app-logo>
+
+    <ul class="space-y-4 w-full">
+      <li>
+        <button
+          class="w-full mb-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 text-white font-semibold py-3 px-6 border border-gray-400 rounded-lg shadow"
+          routerLink="/chatgpt">
+          <div class="flex items-center justify-center"><ng-icon class="text-lime-300 mr-2" size="1.75rem" name="matForumRound"></ng-icon><span>ChatGPT 3.5</span></div>
+        </button>
+      </li>
+      <li>
+        <button
+          class="w-full mb-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 text-white font-semibold py-3 px-6 border border-gray-400 rounded-lg shadow"
+          routerLink="/qa-chatgpt">
+          <div class="flex items-center justify-center"><ng-icon class="text-yellow-400 mr-2" size="1.75rem" name="matTipsAndUpdatesRound"></ng-icon><span>QA ChatGPT</span></div>
+        </button>
+      </li>
+      <li>
+        <button
+          class="w-full mb-4 bg-gradient-to-r m-auto from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 active:from-blue-700 active:to-purple-700 text-white font-semibold py-3 px-6 border border-gray-400 rounded-lg shadow"
+          routerLink="/qa-embedding">
+          <div class="flex items-center justify-center"><ng-icon class="text-rose-300 mr-2" size="1.75rem" name="matAutoStoriesRound"></ng-icon><span>QA 文本管理</span></div>
+        </button>
+      </li>
+    </ul>
+  </div>

@@ -1,0 +1,13 @@
+.absolute-arrow::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  right: 15px;
+  width: 21px;
+  height: 21px;
+  background-color: #1F2937;
+  transform: rotate(45deg);
+  border: 1px solid #4B5563;
+  border-top-width: 0;
+  border-left-width: 0;
+}

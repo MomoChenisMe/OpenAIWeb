@@ -1,0 +1,14 @@
+
+<div class="flex justify-center items-center h-screen bg-gradient-to-r from-purple-600 to-blue-600">
+
+  <div class="bg-gray-800 p-5 rounded-lg shadow-lg flex flex-col items-center">
+
+    <app-logo cssClass="h-24 w-72 mb-10" fillColor="#000000"></app-logo>
+
+    <h1 class="text-white text-2xl mb-6">歡迎使用</h1>
+    <asl-google-signin-button *ngIf="!(loading$ | async)" type='standard' size='large' shape="pill" theme="filled_blue"></asl-google-signin-button>
+    <span class="loader text-2xl" *ngIf="(loading$ | async)"></span>
+    <span class="text-gray-400 text-sm mt-10">目前只提供Google帳號登入</span>
+  </div>
+</div>
+

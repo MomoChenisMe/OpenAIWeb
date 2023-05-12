@@ -1,0 +1,95 @@
+<div class="flex flex-col items-center justify-center min-h-screen">
+  <!-- Hamburger 選單 -->
+  <app-slider-menu [showHamburger]="false"></app-slider-menu>
+
+  <!-- 主要內容 -->
+  <div class="absolute inset-0 flex items-center justify-center mt-16">
+    <div class="w-full h-full p-4 flex flex-col items-center justify-center">
+      <div class="relative flex flex-col bg-gray-800 rounded-lg shadow-lg w-full h-full overflow-hidden">
+        <div class="flex-none text-3xl font-bold p-4 text-white flex items-center"><ng-icon class="text-yellow-400 mr-3"
+            size="2rem" name="matTipsAndUpdatesRound"></ng-icon>
+          <span>QA ChatGPT</span>
+        </div>
+        <div class="flex-none bg-gray-800 mt-4 p-4 flex flex-row items-start justify-start">
+          <!-- User頭像 -->
+          <img *ngIf="!UserPicture || UserPicture === ''"
+            class="flex-none w-8 h-8 rounded-full bg-gray-50 mr-3 flex items-center justify-center text-blue-600 text-lg font-bold"
+            src="assets/User-Avatar.svg">
+          <img *ngIf="UserPicture && UserPicture !== ''"
+            class="flex-none w-8 h-8 bg-gray-50 p-1 rounded-full mr-3 flex items-center justify-center"
+            [src]="UserPicture">
+          <!-- User對話框 -->
+          <div *ngIf="userChatData.content !== ''" class="flex-1 text-gray-300">
+            {{ userChatData.content }}
+          </div>
+        </div>
+        <div class="flex-1 bg-gray-600 p-4 flex flex-row items-start justify-start overflow-auto w-full h-full">
+          <!-- AI頭像 -->
+          <img class="flex-none w-8 h-8 rounded-full bg-purple-50 mr-3 flex items-center justify-center"
+            src="assets/AI-Avatar.svg">
+          <!-- AI對話框 -->
+          <div *ngIf="qaChatData.content !== '' else waitingGenerateTemplate" class="flex-1 flex flex-col">
+            <markdown class="prose prose-default text-white max-w-full" lineNumbers ngPreserveWhitespaces
+              [data]="qaChatData.content">
+            </markdown>
+            <div *ngIf="usingTextData.length > 0 else searchUsingTextTemplate" class="flex flex-row items-center mt-3">
+              <ng-icon class="text-blue-300 mr-1" size="1.25rem" name="matAutoAwesomeRound"></ng-icon>
+              <span class="text-purple-300 mr-2">參考文本&nbsp;:</span>
+              <ng-container *ngFor="let item of usingTextData">
+                <button
+                  class="bg-blue-100 rounded-lg px-2 py-1 font-bold text-blue-600 hover:bg-blue-200 hover:text-blue-500 mr-4"
+                  (click)="onOpenQATextClick(item.textGuid)">{{ item.textName }}</button>
+              </ng-container>
+            </div>
+            <ng-template #searchUsingTextTemplate>
+              <div *ngIf="(loading$ | async) && (generateUsingText$ | async)" class="flex flex-row items-center mt-3">
+                <ng-icon class="text-blue-300 mr-1" size="1.25rem" name="matAutoAwesomeRound"></ng-icon>
+                <span class="text-purple-300 mr-2">參考文本&nbsp;:</span>
+                <span class="loaderText flex items-center">搜尋參考文本中</span>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #waitingGenerateTemplate>
+            <div class="flex-1 flex flex-row items-center">
+              <span class="loaderText flex items-center">正在為您產生QA解答中,請稍候</span>
+            </div>
+          </ng-template>
+        </div>
+        <form [formGroup]="qaForm" class="flex-none relative flex items-center p-4 bg-gray-800 rounded-b-lg">
+          <input
+            class="bg-gray-900 border border-blue-700 rounded-md p-3 flex-1 text-white focus:outline-none focus:border-blue-400 appearance-none"
+            type="text" placeholder="輸入您的QA提問..." formControlName="question" />
+          <button *ngIf="!(loading$ | async)"
+            class="absolute right-5 bg-gray-900 hover:bg-gray-700 text-white p-2 rounded hover:shadow-lg flex items-center"
+            type="submit" (click)="onQASendClick()" [disabled]="(loading$ | async)">
+            <ng-icon size="1.25rem" name="matSendRound"></ng-icon>
+          </button>
+          <span class="loader absolute right-8 p-2" *ngIf="(loading$ | async)"></span>
+        </form>
+        <div *ngIf="usingTextData.length > 0" class="absolute inset-0 w-full h-full z-20"
+          [@slideInOut]="qaTextAnimationState" (click)="onCloseQATextClick($event)">
+          <div
+            class="bg-gray-800 h-full w-1/2 shadow-2xl shadow-gray-900 rounded-t-lg border-gray-700 border ml-auto flex flex-col" (click)="$event.stopPropagation()">
+            <div class="flex-none flex flex-row items-center p-2">
+              <button class="rounded-lg px-2 py-1 text-blue-600 hover:bg-blue-200 hover:text-blue-500 flex items-center"
+                (click)="onCloseQATextClick($event)"><ng-icon class="text-gray-200 mr-1" size="1.5rem"
+                  name="matCloseRound"></ng-icon></button>
+            </div>
+            <div class="flex-1 mx-2 mb-2 p-2 bg-gray-900 border rounded-lg border-blue-700 overflow-hidden">
+              <div class="w-full h-full overflow-auto">
+                <markdown class="prose prose-default text-white" lineNumbers ngPreserveWhitespaces
+                  [data]="citationsText?.textHtml">
+                </markdown>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logo -->
+  <app-logo cssClass="absolute top-4 left-20 h-10 w-24"></app-logo>
+  <!-- User -->
+  <app-user></app-user>
+</div>

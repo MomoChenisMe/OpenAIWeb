@@ -1,0 +1,11 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circle background -->
+  <circle cx="50" cy="50" r="45" fill="#F2F2F2" />
+  <!-- Eyes -->
+  <circle cx="40" cy="40" r="5" fill="#3A5AEB" />
+  <circle cx="60" cy="40" r="5" fill="#3A5AEB" />
+  <!-- Mouth -->
+  <path d="M 30,55 a20,20 0 0 0 20,20 a20,20 0 0 0 20,-20" fill="#3A5AEB" />
+  <!-- Outer circle -->
+  <circle cx="50" cy="50" r="35" fill="none" stroke="#3A5AEB" stroke-width="5" />
+</svg>

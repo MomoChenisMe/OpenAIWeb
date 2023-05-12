@@ -1,0 +1,142 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 捲軸樣式 */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+/* 捲軸軌道 */
+::-webkit-scrollbar-track {
+  background-color: #1a1c24;
+}
+
+/* 捲軸滑塊 */
+::-webkit-scrollbar-thumb {
+  background-color: #c792ea;
+  border-radius: 10px;
+  border: 3px solid #292d3e;
+}
+
+/* 捲軸滑塊懸停樣式 */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a370f7;
+}
+
+/* 捲軸角落 */
+::-webkit-scrollbar-corner {
+  background-color: #292d3e;
+}
+
+/* 滑鼠滾輪樣式 */
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.loader {
+  transform: rotateZ(45deg);
+  perspective: 1000px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}
+
+.loader:before,
+.loader:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  border-radius: 50%;
+  transform: rotateX(70deg);
+  animation: 1s spin linear infinite;
+}
+
+.loader:after {
+  color: rgb(147 51 234);
+  transform: rotateY(70deg);
+  animation-delay: .4s;
+}
+
+@keyframes rotate {
+  0% {
+    transform: translate(-50%, -50%) rotateZ(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotateZ(360deg);
+  }
+}
+
+@keyframes rotateccw {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes spin {
+
+  0%,
+  100% {
+    box-shadow: .2em 0px 0 0px currentcolor;
+  }
+
+  12% {
+    box-shadow: .2em .2em 0 0 currentcolor;
+  }
+
+  25% {
+    box-shadow: 0 .2em 0 0px currentcolor;
+  }
+
+  37% {
+    box-shadow: -.2em .2em 0 0 currentcolor;
+  }
+
+  50% {
+    box-shadow: -.2em 0 0 0 currentcolor;
+  }
+
+  62% {
+    box-shadow: -.2em -.2em 0 0 currentcolor;
+  }
+
+  75% {
+    box-shadow: 0px -.2em 0 0 currentcolor;
+  }
+
+  87% {
+    box-shadow: .2em -.2em 0 0 currentcolor;
+  }
+}
+
+.ck.ck-editor__editable {
+  background-color: rgb(17 24 39);
+  color: rgb(255 255 255);
+  border: 1px solid rgb(37 99 235) !important;
+  border-radius: 0.5rem !important;
+  line-height: 1.25rem !important;
+  padding: 0.5rem 1rem !important;
+  min-height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.ck.ck-editor__editable:focus {
+  outline: none !important;
+  border-color: rgb(96 165 250) !important;
+}
+
