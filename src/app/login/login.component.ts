@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     tap(() => this.loadingSubject$.next(true)),
     switchMap(socialUser => {
       if (socialUser) {
-        return this.httpService.get<OpenAITokenModel>(`/Auth/GoogleOneTapSignIn/${socialUser.idToken}`).pipe(
+        return this.httpService.get<OpenAITokenModel>(`/Auth/GoogleOpenIdConnect/${socialUser.idToken}`).pipe(
           map(result => {
             if (result.token !== '') {
               this.authService.setAuthToken(result.token);
