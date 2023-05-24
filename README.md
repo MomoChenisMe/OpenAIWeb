@@ -6,13 +6,19 @@
 ![image](https://github.com/MomoChenisMe/OpenAIWeb/blob/main/DemoImage/OpenAIWeb-11.png)
 ![image](https://github.com/MomoChenisMe/OpenAIWeb/blob/main/DemoImage/OpenAIWeb-5.png)
 
+## 📒 **執行方式**
+```
+npm install
+ng serve
+```
+<br>
 
 ## 📒 **環境變數相關資訊**
 - **host** : API Url
 - **googleClientId** : Google Login Client Id
 <br>
 
-## ckeditor5-custom
+## 📒 **ckeditor5-custom**
 打包方式
 ```
 npx webpack --mode production
